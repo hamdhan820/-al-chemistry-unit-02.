@@ -1,1 +1,479 @@
-<!doctype html><html lang="ta"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><meta name="theme-color" content="#10244e"/><title>A/L Chemistry · Structure & Bonding</title><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Tamil:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet"></head><body><div id="root"></div><script type="module" src="/src/main.tsx"></script></body></html>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#07152e">
+<title>A/L Chemistry | Structure & Bonding</title>
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Sans+Tamil:wght@400;500;600;700&display=swap');
+
+:root {
+  --bg:#07152e;
+  --panel:#102443;
+  --panel2:#152d50;
+  --blue:#3989ff;
+  --cyan:#43d6e8;
+  --white:#f4f8ff;
+  --muted:#9eb1ca;
+  --green:#43d6a0;
+  --border:#294363;
+}
+*{box-sizing:border-box}
+body{
+ margin:0;background:var(--bg);color:var(--white);
+ font-family:Inter,"Noto Sans Tamil",sans-serif;
+}
+button,select{font:inherit}
+button{cursor:pointer}
+.app{display:flex;min-height:100vh}
+.sidebar{
+ width:245px;flex-shrink:0;background:#091a35;
+ border-right:1px solid var(--border);
+ padding:25px 16px;position:fixed;height:100vh;
+ overflow-y:auto;
+}
+.brand{display:flex;align-items:center;gap:12px;margin-bottom:35px}
+.logo{
+ width:44px;height:44px;border-radius:14px;
+ display:grid;place-items:center;
+ background:linear-gradient(135deg,#3989ff,#43d6e8);
+ color:#07152e;font-size:24px;font-weight:800;
+}
+.brand h2{font-size:16px;margin:0}
+.brand small{color:var(--muted);font-size:10px}
+.nav-label{font-size:10px;color:#7890ad;letter-spacing:2px;margin:25px 10px 12px}
+.nav button{
+ display:flex;align-items:center;gap:12px;width:100%;
+ padding:13px;border:0;background:transparent;
+ color:var(--muted);border-radius:11px;text-align:left;
+ margin:4px 0;font-size:13px;
+}
+.nav button:hover,.nav button.active{
+ background:#19365d;color:white;
+}
+.nav button.active{border-left:3px solid var(--cyan)}
+.nav-icon{font-size:18px;width:23px;text-align:center}
+.side-note{
+ margin-top:35px;padding:15px;border:1px solid var(--border);
+ border-radius:13px;color:var(--muted);font-size:11px;line-height:1.7;
+}
+.main{margin-left:245px;width:calc(100% - 245px);padding:30px 4% 70px}
+.topbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:35px}
+.topbar small{color:var(--muted)}
+.tag{
+ padding:8px 13px;border-radius:30px;background:#17385b;
+ color:var(--cyan);font-size:11px;
+}
+.page{display:none;animation:appear .3s ease}
+.page.active{display:block}
+@keyframes appear{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+h1{font-size:clamp(26px,4vw,40px);margin:10px 0}
+h2{font-size:20px}
+h3{font-size:15px}
+p{line-height:1.8;color:var(--muted);font-size:13px}
+.eyebrow{color:var(--cyan);font-size:10px;letter-spacing:2px;font-weight:700}
+.hero{
+ padding:32px;border-radius:22px;
+ background:linear-gradient(120deg,#153d70,#102443 65%,#102d4a);
+ border:1px solid #31577d;position:relative;overflow:hidden;
+}
+.hero h1{max-width:650px}
+.hero p{max-width:580px}
+.hero-art{
+ position:absolute;right:35px;top:25px;
+ font-size:100px;opacity:.17;
+}
+.btn{
+ border:0;border-radius:10px;padding:12px 17px;
+ background:var(--blue);color:white;font-weight:700;font-size:12px;
+}
+.btn.secondary{background:#203c60;border:1px solid var(--border)}
+.grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:15px;margin-top:20px}
+.grid.two{grid-template-columns:repeat(2,minmax(0,1fr))}
+.card{
+ background:var(--panel);border:1px solid var(--border);
+ padding:21px;border-radius:17px;min-width:0;
+}
+.card small{color:var(--muted)}
+.card-icon{font-size:25px;margin-bottom:12px}
+.card h3{margin:8px 0}
+.topic-card{cursor:pointer;transition:.2s}
+.topic-card:hover{transform:translateY(-3px);border-color:var(--blue)}
+.title{margin-bottom:25px}
+.title p{max-width:750px}
+select{
+ background:#0b1d38;color:white;border:1px solid var(--border);
+ padding:12px;border-radius:10px;width:100%;max-width:320px;
+}
+.panel{
+ background:var(--panel);border:1px solid var(--border);
+ padding:22px;border-radius:16px;margin:15px 0;
+}
+.panel h2{margin-top:0}
+.row{display:flex;gap:15px;align-items:center;flex-wrap:wrap}
+.stage{
+ min-height:180px;background:#0a1c37;border:1px solid var(--border);
+ border-radius:14px;display:grid;place-items:center;
+ margin:15px 0;padding:15px;overflow:hidden;
+}
+.atom{font-size:21px;font-weight:800;fill:white}
+.atomcircle{fill:#153d70;stroke:#43d6e8;stroke-width:2}
+.bondline{stroke:#dceaff;stroke-width:3;stroke-linecap:round}
+.dot{fill:#43d6e8}
+.steps{display:grid;gap:10px;margin-top:15px}
+.step{
+ display:flex;gap:13px;padding:13px;
+ background:#0c1d38;border-radius:11px;
+ color:var(--muted);font-size:12px;line-height:1.7;
+}
+.number{
+ width:27px;height:27px;flex-shrink:0;
+ display:grid;place-items:center;border-radius:9px;
+ background:#1e4775;color:var(--cyan);font-weight:800;
+}
+.counter{
+ display:flex;align-items:center;justify-content:space-between;
+ padding:15px 0;border-bottom:1px solid var(--border);
+ font-size:13px;
+}
+.counter-controls{display:flex;align-items:center;gap:15px}
+.counter-controls button{
+ width:34px;height:34px;border:1px solid var(--border);
+ background:#19385e;color:white;border-radius:9px;font-size:19px;
+}
+.counter-controls strong{min-width:20px;text-align:center}
+.result{
+ margin-top:17px;padding:20px;border-radius:13px;
+ background:linear-gradient(120deg,#163b67,#102b48);
+ border:1px solid #31618c;
+}
+.result strong{color:var(--cyan);font-size:21px}
+.badge{
+ display:inline-block;background:#193c5e;color:var(--cyan);
+ padding:6px 10px;border-radius:30px;font-size:10px;
+}
+.tablewrap{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:12px;min-width:400px}
+th,td{padding:13px;text-align:left;border-bottom:1px solid var(--border)}
+th{color:var(--cyan);background:#122d4d}
+td{color:#d8e4f5}
+.orbital{
+ display:flex;justify-content:center;align-items:center;
+ gap:8px;min-height:135px;
+}
+.orb{
+ width:65px;height:38px;border-radius:50%;
+ background:linear-gradient(90deg,#3989ff,#43d6e8);
+ opacity:.8;transform:rotate(-25deg);
+}
+.orb.p{width:38px;height:85px}
+.orb.s{width:65px;height:65px;border-radius:50%}
+.orbital-axis{height:3px;width:45px;background:white}
+.bondchoices{display:flex;gap:10px;flex-wrap:wrap;margin:15px 0}
+.bondchoices button{
+ flex:1;min-width:90px;padding:14px;
+ background:#0b1d38;color:white;border:1px solid var(--border);
+ border-radius:12px;
+}
+.bondchoices button.selected{border-color:var(--cyan);background:#163b60}
+.answer{
+ display:block;width:100%;padding:14px;margin:9px 0;
+ text-align:left;background:#0b1d38;border:1px solid var(--border);
+ color:white;border-radius:10px;font-size:12px;
+}
+.answer.correct{border-color:var(--green);background:#103c39}
+.answer.incorrect{border-color:#ff7777;background:#48272e}
+.feedback{font-size:12px;margin-top:10px}
+.progress{height:7px;background:#263e5b;border-radius:10px;overflow:hidden}
+.progress div{height:100%;width:0;background:var(--cyan)}
+.footer{margin-top:45px;text-align:center;color:#6e86a4;font-size:10px}
+.mobilehead{display:none}
+@media(max-width:850px){
+ .sidebar{width:70px;padding:15px 8px}
+ .brand{justify-content:center}.brand h2,.brand small,.nav-label,.nav-text,.side-note{display:none}
+ .nav button{justify-content:center;padding:13px 4px}
+ .main{margin-left:70px;width:calc(100% - 70px);padding:22px 4%}
+ .grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media(max-width:550px){
+ .sidebar{position:fixed;top:auto;bottom:0;width:100%;height:65px;
+  z-index:20;padding:5px;background:#091a35;border-top:1px solid var(--border)}
+ .brand,.nav-label,.side-note{display:none}
+ .nav{display:flex;justify-content:space-around}
+ .nav button{flex:1;display:flex;flex-direction:column;gap:2px;
+  margin:0;padding:5px 1px;font-size:9px;border-radius:7px}
+ .nav-icon{font-size:17px}
+ .nav-text{display:block;font-size:8px}
+ .main{margin:0;width:100%;padding:18px 14px 85px}
+ .grid,.grid.two{grid-template-columns:1fr}
+ .hero{padding:22px}
+ .hero-art{right:10px;font-size:65px}
+ .topbar{margin-bottom:22px}
+}
+</style>
+</head>
+
+<body>
+<div class="app">
+<aside class="sidebar">
+ <div class="brand">
+  <div class="logo">⚛</div>
+  <div><h2>CHEMISTRY</h2><small>A/L UNIT 02</small></div>
+ </div>
+ <div class="nav-label">LEARNING MENU</div>
+ <nav class="nav">
+  <button class="active" data-page="home"><span class="nav-icon">⌂</span><span class="nav-text">Overview</span></button>
+  <button data-page="lewis"><span class="nav-icon">⚛</span><span class="nav-text">Lewis Structures</span></button>
+  <button data-page="vsepr"><span class="nav-icon">◇</span><span class="nav-text">VSEPR Theory</span></button>
+  <button data-page="hybrid"><span class="nav-icon">◉</span><span class="nav-text">Hybridisation</span></button>
+  <button data-page="orbitals"><span class="nav-icon">⇄</span><span class="nav-text">Orbital Overlap</span></button>
+  <button data-page="exam"><span class="nav-icon">✓</span><span class="nav-text">Exam Practice</span></button>
+ </nav>
+ <div class="side-note">A/L CHEMISTRY<br>Structure & Bonding<br><br>Learn • Understand • Practise</div>
+</aside>
+
+<main class="main">
+ <div class="topbar">
+  <div><small>YOUR LEARNING SPACE</small><br><b>Structure & Bonding</b></div>
+  <span class="tag">A/L CHEMISTRY</span>
+ </div>
+
+ <!-- OVERVIEW -->
+ <section class="page active" id="home">
+  <div class="hero">
+   <div class="hero-art">⚛</div>
+   <span class="eyebrow">UNIT 02 • CHEMICAL BONDING</span>
+   <h1>Understand the world of atoms.</h1>
+   <p>அணுக்களின் அமைப்பு மற்றும் இரசாயனப் பிணைப்புகளைப் படிப்படியாகக் கற்றுக்கொள்வோம்.</p>
+   <button class="btn" onclick="showPage('lewis')">Start Learning →</button>
+  </div>
+  <div class="grid">
+   <div class="card"><div class="card-icon">⚛</div><small>MODULE 01</small><h3>Lewis Structures</h3><p>Valence electrons and electron-dot structures.</p><button class="btn secondary" onclick="showPage('lewis')">Explore →</button></div>
+   <div class="card"><div class="card-icon">◇</div><small>MODULE 02</small><h3>VSEPR Theory</h3><p>Predict molecular shapes using electron regions.</p><button class="btn secondary" onclick="showPage('vsepr')">Explore →</button></div>
+   <div class="card"><div class="card-icon">◉</div><small>MODULE 03</small><h3>Hybridisation</h3><p>Understand sp, sp² and sp³ orbitals.</p><button class="btn secondary" onclick="showPage('hybrid')">Explore →</button></div>
+   <div class="card"><div class="card-icon">⇄</div><small>MODULE 04</small><h3>Orbital Overlap</h3><p>Learn sigma and pi bond formation.</p><button class="btn secondary" onclick="showPage('orbitals')">Explore →</button></div>
+   <div class="card"><div class="card-icon">✓</div><small>MODULE 05</small><h3>Exam Practice</h3><p>Test your understanding with MCQs.</p><button class="btn secondary" onclick="showPage('exam')">Explore →</button></div>
+   <div class="card"><div class="card-icon">📘</div><small>STUDY TIP</small><h3>Learn step by step</h3><p>Understand the structure first, then predict its geometry and bonding.</p></div>
+  </div>
+ </section>
+
+ <!-- LEWIS -->
+ <section class="page" id="lewis">
+  <div class="title">
+   <span class="eyebrow">MODULE 01</span>
+   <h1>Lewis Structures</h1>
+   <p>ஒரு molecule-இல் உள்ள valence electrons எவ்வாறு bonds மற்றும் lone pairs ஆக அமைந்துள்ளன என்பதைப் பார்ப்போம்.</p>
+  </div>
+  <div class="panel">
+   <h2>Select a molecule</h2>
+   <select id="molecule" onchange="renderLewis()">
+    <option value="HCN">HCN – Hydrogen cyanide</option>
+    <option value="CH4">CH₄ – Methane</option>
+    <option value="NH3">NH₃ – Ammonia</option>
+    <option value="H2O">H₂O – Water</option>
+    <option value="CO2">CO₂ – Carbon dioxide</option>
+    <option value="CH3NH2">CH₃NH₂ – Methylamine</option>
+    <option value="C2H4">C₂H₄ – Ethene</option>
+   </select>
+   <div class="stage" id="lewisDiagram"></div>
+   <div class="row">
+    <span class="badge" id="electronCount">Total valence electrons</span>
+    <span class="badge" id="moleculeName">HCN</span>
+   </div>
+   <h3>Step-by-step explanation</h3>
+   <div class="steps" id="lewisSteps"></div>
+  </div>
+  <div class="panel">
+   <h2>7-step Lewis structure method</h2>
+   <div class="steps">
+    <div class="step"><span class="number">1</span>Calculate the total number of valence electrons.</div>
+    <div class="step"><span class="number">2</span>Choose the central atom (usually the least electronegative atom, except H).</div>
+    <div class="step"><span class="number">3</span>Connect atoms using single bonds.</div>
+    <div class="step"><span class="number">4</span>Complete the octets of outer atoms.</div>
+    <div class="step"><span class="number">5</span>Place remaining electrons on the central atom.</div>
+    <div class="step"><span class="number">6</span>Form multiple bonds if the central atom lacks an octet.</div>
+    <div class="step"><span class="number">7</span>Check the total electron count and formal charges.</div>
+   </div>
+  </div>
+ </section>
+
+ <!-- VSEPR -->
+ <section class="page" id="vsepr">
+  <div class="title">
+   <span class="eyebrow">MODULE 02</span>
+   <h1>VSEPR Theory</h1>
+   <p>மைய atom-ஐச் சுற்றியுள்ள Bonding regions மற்றும் Lone pairs எண்ணிக்கையைத் தேர்வு செய்யுங்கள்.</p>
+  </div>
+  <div class="grid two">
+   <div class="panel">
+    <h2>VSEPR Calculator</h2>
+    <div class="counter">
+     <b>Bonding regions (BP)</b>
+     <div class="counter-controls">
+      <button onclick="changeBP(-1)">−</button><strong id="bp">2</strong><button onclick="changeBP(1)">+</button>
+     </div>
+    </div>
+    <div class="counter">
+     <b>Lone pairs (LP)</b>
+     <div class="counter-controls">
+      <button onclick="changeLP(-1)">−</button><strong id="lp">0</strong><button onclick="changeLP(1)">+</button>
+     </div>
+    </div>
+    <div class="result">
+     <small>STERIC NUMBER (BP + LP)</small><br>
+     <strong id="sn">2</strong>
+     <p id="geometry">Linear arrangement</p>
+     <span class="badge" id="shape">Linear</span>
+    </div>
+    <div class="stage" id="shapeDiagram"></div>
+    <p id="angle">Ideal bond angle: 180°</p>
+    <button class="btn secondary" onclick="resetVSEPR()">Reset calculator</button>
+   </div>
+   <div class="panel">
+    <h2>Electron pair repulsion</h2>
+    <p>Electron regions repel one another and arrange themselves as far apart as possible.</p>
+    <div class="steps">
+     <div class="step"><span class="number">1</span><b>Lone pair – Lone pair</b><br>Strongest repulsion.</div>
+     <div class="step"><span class="number">2</span><b>Lone pair – Bond pair</b><br>Intermediate repulsion.</div>
+     <div class="step"><span class="number">3</span><b>Bond pair – Bond pair</b><br>Weakest repulsion.</div>
+    </div>
+    <div class="result">
+     <strong>LP–LP > LP–BP > BP–BP</strong>
+     <p>Multiple bonds count as one electron region in VSEPR.</p>
+    </div>
+   </div>
+  </div>
+  <div class="panel">
+   <h2>VSEPR reference table</h2>
+   <div class="tablewrap">
+    <table>
+     <tr><th>BP</th><th>LP</th><th>Steric no.</th><th>Shape</th><th>Angle</th></tr>
+     <tr><td>2</td><td>0</td><td>2</td><td>Linear</td><td>180°</td></tr>
+     <tr><td>3</td><td>0</td><td>3</td><td>Trigonal planar</td><td>120°</td></tr>
+     <tr><td>2</td><td>1</td><td>3</td><td>Angular</td><td>Less than 120°</td></tr>
+     <tr><td>4</td><td>0</td><td>4</td><td>Tetrahedral</td><td>109.5°</td></tr>
+     <tr><td>3</td><td>1</td><td>4</td><td>Trigonal pyramidal</td><td>107° (approx.)</td></tr>
+     <tr><td>2</td><td>2</td><td>4</td><td>Angular</td><td>104.5° (approx.)</td></tr>
+     <tr><td>5</td><td>0</td><td>5</td><td>Trigonal bipyramidal</td><td>90°, 120°</td></tr>
+     <tr><td>4</td><td>1</td><td>5</td><td>See-saw</td><td>Less than ideal</td></tr>
+     <tr><td>3</td><td>2</td><td>5</td><td>T-shaped</td><td>Approx. 90°</td></tr>
+     <tr><td>2</td><td>3</td><td>5</td><td>Linear</td><td>180°</td></tr>
+     <tr><td>6</td><td>0</td><td>6</td><td>Octahedral</td><td>90°</td></tr>
+     <tr><td>5</td><td>1</td><td>6</td><td>Square pyramidal</td><td>Approx. 90°</td></tr>
+     <tr><td>4</td><td>2</td><td>6</td><td>Square planar</td><td>90°</td></tr>
+    </table>
+   </div>
+  </div>
+ </section>
+
+ <!-- HYBRIDISATION -->
+ <section class="page" id="hybrid">
+  <div class="title">
+   <span class="eyebrow">MODULE 03</span>
+   <h1>Hybridisation</h1>
+   <p>Atomic orbitals ஒன்றுடன் ஒன்று கலந்து புதிய hybrid orbitals உருவாகும் முறையைப் புரிந்துகொள்வோம்.</p>
+  </div>
+  <div class="grid two">
+   <div class="panel">
+    <h2>s orbital</h2>
+    <div class="stage"><div class="orb s"></div></div>
+    <p>Spherical shape – கோள வடிவம்.</p>
+   </div>
+   <div class="panel">
+    <h2>p orbital</h2>
+    <div class="stage"><div class="orb p"></div><div class="orb p"></div></div>
+    <p>Dumbbell shape – இரு மடல் வடிவம்.</p>
+   </div>
+  </div>
+  <div class="panel">
+   <h2>Hybridisation reference</h2>
+   <div class="tablewrap">
+    <table>
+     <tr><th>Steric number</th><th>Hybridisation</th><th>Electron geometry</th><th>Ideal angle</th></tr>
+     <tr><td>2</td><td>sp</td><td>Linear</td><td>180°</td></tr>
+     <tr><td>3</td><td>sp²</td><td>Trigonal planar</td><td>120°</td></tr>
+     <tr><td>4</td><td>sp³</td><td>Tetrahedral</td><td>109.5°</td></tr>
+     <tr><td>5</td><td>sp³d</td><td>Trigonal bipyramidal</td><td>90°, 120°</td></tr>
+     <tr><td>6</td><td>sp³d²</td><td>Octahedral</td><td>90°</td></tr>
+    </table>
+   </div>
+  </div>
+  <div class="panel">
+   <h2>Important method</h2>
+   <div class="result">
+    <strong>Steric number = BP + LP</strong>
+    <p>2 → sp | 3 → sp² | 4 → sp³ | 5 → sp³d | 6 → sp³d²</p>
+   </div>
+   <p>குறிப்பு: இது பாரம்பரிய A/L hybridisation விளக்க முறையைப் பயன்படுத்துகிறது. உங்கள் பாடநூல் convention-ஐப் பின்பற்றவும்.</p>
+  </div>
+ </section>
+
+ <!-- ORBITAL OVERLAP -->
+ <section class="page" id="orbitals">
+  <div class="title">
+   <span class="eyebrow">MODULE 04</span>
+   <h1>Orbital Overlap</h1>
+   <p>C மற்றும் N atoms எந்த hybrid orbitals மூலம் இணைகின்றன என்பதைப் பார்ப்போம்.</p>
+  </div>
+  <div class="panel">
+   <h2>Select the C–N bond type</h2>
+   <div class="bondchoices">
+    <button class="selected" data-bond="amine" onclick="selectBond('amine')"><b>C—N</b><br><small>Single bond</small></button>
+    <button data-bond="imine" onclick="selectBond('imine')"><b>C=N</b><br><small>Double bond</small></button>
+    <button data-bond="nitrile" onclick="selectBond('nitrile')"><b>C≡N</b><br><small>Triple bond</small></button>
+   </div>
+   <div class="grid two">
+    <div>
+     <div class="result">
+      <small>CARBON HYBRIDISATION</small><br><strong id="cHybrid">sp³</strong>
+      <p id="bondDescription">Typical C—N single bond, as in methylamine.</p>
+     </div>
+     <div class="result">
+      <small>NITROGEN HYBRIDISATION</small><br><strong id="nHybrid">sp³</strong>
+     </div>
+     <div class="result">
+      <p>σ bond overlap</p><strong id="sigma">1</strong>
+      <p>π bond overlap</p><strong id="pi">0</strong>
+      <p>Total bonds</p><strong id="total">1</strong>
+     </div>
+    </div>
+    <div>
+     <h3>Conceptual orbital diagram</h3>
+     <div class="stage">
+      <div class="orbital"><div class="orb"></div><div class="orbital-axis"></div><div class="orb"></div></div>
+     </div>
+     <p>Conceptual illustration – not to scale.</p>
+     <div class="stage">
+      <div class="orbital"><div class="orb p"></div><div class="orb p"></div></div>
+     </div>
+     <p>Sideways overlap of p orbitals forms a π bond.</p>
+    </div>
+   </div>
+  </div>
+  <div class="grid two">
+   <div class="panel">
+    <h2>σ bond</h2>
+    <span class="badge">Head-on overlap</span>
+    <p>Orbitals internuclear axis வழியாக நேருக்கு நேர் overlap செய்கின்றன. இதுவே sigma bond.</p>
+   </div>
+   <div class="panel">
+    <h2>π bond</h2>
+    <span class="badge">Sideways overlap</span>
+    <p>இரண்டு parallel p orbitals பக்கவாட்டில் overlap செய்வதால் pi bond உருவாகிறது.</p>
+   </div>
+  </div>
+ </section>
+
+ <!-- EXAM -->
+ <section class="page" id="exam">
+  <div class="title">
+   <span class="eyebrow">MODULE 05</span>
+   <h1>Exam Practice</h1>
+   <p>உங்கள் அறிவைப் பரிசோதித்துப் பாருங்கள். சரியான விடையைத் தேர்ந்தெடுத்து விளக்கத்தைப் படியுங்கள்.</p>
+  </div>
+  <div class="panel">
+   <div class="row" style="justify-content:space-between">
+    <span class="badge" id="questionNumber">QUESTI
